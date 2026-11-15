@@ -67,3 +67,5 @@ function App() {
 }
 
 export default App;
+//projet terminé, application fonctionnelle avec analyse de mot de passe et affichage du niveau de sécurité. 15/11/2026
+//Bangali © 2026 Mara All rights Reserved😀😂
