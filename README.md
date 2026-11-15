@@ -25,7 +25,7 @@ L'objectif est de comprendre les bases de React, la manipulation des données et
 Clone le dépôt :
 
 ```bash
-git clone URL_DU_DEPOT
+git clone https://github.com/SniperKingDev/passwordlab.git
 ```
 
 Entre dans le dossier :
