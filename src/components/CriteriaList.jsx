@@ -4,8 +4,9 @@ import "./CriteriaList.css";
 function CriteriaList({ criteria }) {
   return (
     <div className="criteria-list">
+      
       <h3>Security requirements</h3>
-
+      {/* créer une grille de critères sécuritaires avec des icônes pour indiquer si chaque critère est passé ou échoué */}
       <div className="criteria-grid">
         {criteria.map((item) => (
           <div className="criteria-item" key={item.id}>
