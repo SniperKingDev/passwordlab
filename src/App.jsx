@@ -1,14 +1,14 @@
 
 import { useState } from "react";
 
-import PasswordInput from "./components/PasswordInput";
-import StrengthMeter from "./components/StrengthMeter";
-import CriteriaList from "./components/CriteriaList";
+import PasswordInput from "./components/PasswordInput.jsx";
+import StrengthMeter from "./components/StrengthMeter.jsx";
+import CriteriaList from "./components/CriteriaList.jsx";
 
-import analyzePassword from "./utils/analyzePassword";
+import analyzePassword from "./utils/analyzePassword.js";
 
 import "./App.css";
-
+//importer les composants nécessaires et le fichier CSS pour le style de l'application
 function App() {
   const [password, setPassword] = useState("");
 
