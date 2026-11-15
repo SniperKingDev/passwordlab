@@ -30,7 +30,7 @@ function App() {
         </header>
 
         <section className="hero">
-          <h1>How secure is your password?</h1>
+          <h1>How secure is your password ?</h1>
           <p>Test your password strength instantly.</p>
         </section>
 
@@ -58,7 +58,7 @@ function App() {
 
         <footer className="footer">
           <span> PASSWORDLAB v1.0</span>
-          <span>LOCAL ANALYSIS ONLY</span>
+          <span>Bangali Mara © 2026 All Rights Reserved</span>
         </footer>
 
       </div>
