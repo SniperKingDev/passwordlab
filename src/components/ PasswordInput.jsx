@@ -23,7 +23,7 @@ function PasswordInput({ value, onChange }) {
           autoCapitalize="none"
           spellCheck={false}
         />
-
+        {/* créer un bouton pour afficher ou masquer le mot de passe */}
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
