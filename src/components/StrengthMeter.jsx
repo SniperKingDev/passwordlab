@@ -11,7 +11,7 @@ const StrengthMeter = ({ score, strength }) => {
     <div className="strength-meter">
 
       <div className="strength-header">
-        <h3>Password strength</h3>
+        <h3>Password strength :</h3>
 
         {/* Affiche le niveau avec sa classe CSS */}
         <span className={`strength-label ${strengthClass}`}>

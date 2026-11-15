@@ -5,6 +5,7 @@
 
 .strength-progress.medium {
   background: #eab308;
+
 }
 
 .strength-progress.strong,
@@ -24,4 +25,19 @@
 .strength-label.strong,
 .strength-label.very-strong {
   color: #36e58a;
+}
+/* Aligne le titre et le niveau de sécurité horizontalement */
+.strength-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Style du niveau de sécurité */
+.strength-label {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
 }
