@@ -29,7 +29,7 @@ const StrengthMeter = ({ score, strength }) => {
 
       {/* Score de sécurité */}
       <div className="strength-footer">
-        <span>SECURITY SCORE</span>
+        <span>Security Score :</span>
         <span> {score}/100</span>
       </div>
 
