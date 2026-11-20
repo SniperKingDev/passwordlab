@@ -57,7 +57,7 @@ function App() {
         </section>
 
         <footer className="footer">
-          <span> PASSWORDLAB v1.0</span>
+          <span> PASSWORDLAB v2.0</span>
           <span>Bangali Mara © 2026 All Rights Reserved</span>
         </footer>
 
