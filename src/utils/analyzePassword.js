@@ -1,66 +1,156 @@
+const PASSWORD_RULES = {
+  minimumLength: 12,
+  strongLength: 16,
+};
 
-function analyzePassword(password) {
-  const length = [...password].length;
-//utiliser la syntaxe spread pour compter correctement les caractères Unicode
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasLowercase = /[a-z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-  const hasSpecial = /[^a-zA-Z0-9]/.test(password);
+const SCORE_WEIGHTS = {
+  length: {
+    veryLong: 35,
+    long: 25,
+    medium: 15,
+    short: 5,
+  },
+  characterType: 10,
+  patternCheck: 25,
+};
 
-  const commonPatterns = [
-    "password",
-    "123456",
-    "qwerty",
-    "azerty",
-    "admin",
-    "welcome",
-    "letmein"
-  ];
-//utiliser la méthode some pour vérifier si le mot de passe contient des motifs communs
-  const normalizedPassword = password.toLowerCase();
+const COMMON_PATTERNS = [
+  "password",
+  "123456",
+  "qwerty",
+  "azerty",
+  "admin",
+  "welcome",
+  "letmein",
+];
 
-  const hasCommonPattern = commonPatterns.some(
-    (pattern) => normalizedPassword.includes(pattern)
+const STRENGTH_LEVELS = [
+  { minimumScore: 85, label: "Very Strong" },
+  { minimumScore: 60, label: "Strong" },
+  { minimumScore: 30, label: "Medium" },
+  { minimumScore: 0, label: "Weak" },
+];
+
+const CHARACTER_REGEX = {
+  uppercase: /\p{Lu}/u,
+  lowercase: /\p{Ll}/u,
+  number: /\p{N}/u,
+  special: /[^\p{L}\p{N}]/u,
+  repeated: /(.)\1{2,}/u,
+};
+
+function getPasswordLength(password) {
+  return [...password].length;
+}
+
+function containsCommonPattern(password) {
+  const normalizedPassword = password.normalize("NFKC").toLowerCase();
+
+  return COMMON_PATTERNS.some((pattern) =>
+    normalizedPassword.includes(pattern)
   );
+}
 
-  const hasRepeatedCharacters = /(.)\1{2,}/.test(password);
+function hasRepeatedCharacters(password) {
+  return CHARACTER_REGEX.repeated.test(password);
+}
+
+function evaluateCriteria(password, length) {
+  const hasUppercase = CHARACTER_REGEX.uppercase.test(password);
+  const hasLowercase = CHARACTER_REGEX.lowercase.test(password);
+  const hasNumber = CHARACTER_REGEX.number.test(password);
+  const hasSpecial = CHARACTER_REGEX.special.test(password);
+
+  const hasCommonPattern = containsCommonPattern(password);
+  const hasRepeatedCharactersDetected =
+    hasRepeatedCharacters(password);
 
   const noCommonPatterns =
-    !hasCommonPattern && !hasRepeatedCharacters;
+    password.length > 0 &&
+    !hasCommonPattern &&
+    !hasRepeatedCharactersDetected;
 
-  const criteria = [
-    { id: 1, label: "Minimum length", passed: length >= 12 },
-    { id: 2, label: "Uppercase", passed: hasUppercase },
-    { id: 3, label: "Lowercase", passed: hasLowercase },
-    { id: 4, label: "Numbers", passed: hasNumber },
-    { id: 5, label: "Special characters", passed: hasSpecial },
-    { id: 6, label: "No common patterns", passed: noCommonPatterns }
+  return [
+    {
+      id: 1,
+      label: "Minimum length",
+      passed: length >= PASSWORD_RULES.minimumLength,
+    },
+    {
+      id: 2,
+      label: "Uppercase",
+      passed: hasUppercase,
+    },
+    {
+      id: 3,
+      label: "Lowercase",
+      passed: hasLowercase,
+    },
+    {
+      id: 4,
+      label: "Numbers",
+      passed: hasNumber,
+    },
+    {
+      id: 5,
+      label: "Special characters",
+      passed: hasSpecial,
+    },
+    {
+      id: 6,
+      label: "No common patterns",
+      passed: noCommonPatterns,
+    },
   ];
+}
 
+function calculateScore(criteria, length) {
   let score = 0;
 
-  if (length >= 16) score += 35;
-  else if (length >= 12) score += 25;
-  else if (length >= 8) score += 15;
-  else if (length > 0) score += 5;
+  if (length >= PASSWORD_RULES.strongLength) {
+    score += SCORE_WEIGHTS.length.veryLong;
+  } else if (length >= PASSWORD_RULES.minimumLength) {
+    score += SCORE_WEIGHTS.length.long;
+  } else if (length >= 8) {
+    score += SCORE_WEIGHTS.length.medium;
+  } else if (length > 0) {
+    score += SCORE_WEIGHTS.length.short;
+  }
 
-  if (hasUppercase) score += 10;
-  if (hasLowercase) score += 10;
-  if (hasNumber) score += 10;
-  if (hasSpecial) score += 10;
+  const characterTypeCriteria = criteria.slice(1, 5);
 
-  if (noCommonPatterns) score += 25;
+  score +=
+    characterTypeCriteria.filter((criterion) => criterion.passed)
+      .length * SCORE_WEIGHTS.characterType;
 
-  let strength = "Weak";
+  if (criteria[5].passed) {
+    score += SCORE_WEIGHTS.patternCheck;
+  }
 
-  if (score >= 85) strength = "Very Strong";
-  else if (score >= 60) strength = "Strong";
-  else if (score >= 30) strength = "Medium";
+  return score;
+}
+
+function getStrength(score) {
+  const level = STRENGTH_LEVELS.find(
+    (strength) => score >= strength.minimumScore
+  );
+
+  return level.label;
+}
+
+function analyzePassword(password) {
+  const safePassword =
+    typeof password === "string" ? password : "";
+
+  const length = getPasswordLength(safePassword);
+  const criteria = evaluateCriteria(safePassword, length);
+  const score = calculateScore(criteria, length);
+  const strength = getStrength(score);
 
   return {
     score,
     strength,
-    criteria
+    criteria,
   };
 }
 
